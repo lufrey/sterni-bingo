@@ -1,30 +1,27 @@
+import { BingoOverview } from "@/components/BingoOverview";
 import { BingoTable } from "@/components/BingoTable";
 import { NameInputForm } from "@/components/NameInputForm";
 import { NumberInputForm } from "@/components/NumberInputForm";
 import { PreviousEntries } from "@/components/PreviousEntries";
-import { bingos } from "@/data/bingos";
 import { getBottleCapEntries } from "@/data/entries";
 import { z } from "zod";
 
 async function LoggedInState({ username }: { username: string }) {
     const entries = await getBottleCapEntries(username);
+    const entryCounts = entries.reduce((acc, entry) => {
+        acc[entry.value] = (acc[entry.value] || 0) + 1;
+        return acc;
+    }, {} as { [key: number]: number });
+    const highestEntryCount = Math.max(...Object.values(entryCounts));
+
     return (
         <>
             <NumberInputForm />
             <PreviousEntries entries={entries} username={username} />
-            <div className="flex flex-wrap justify-center gap-10">
-                {bingos.map((bingo, index) => {
-                    return (
-                        <div key={index}>
-                            <BingoTable
-                                key={index}
-                                bingo={bingo}
-                                entries={entries}
-                            />
-                        </div>
-                    );
-                })}
-            </div>
+            <BingoOverview
+                entries={entries}
+                highestEntryCount={highestEntryCount}
+            />
         </>
     );
 }

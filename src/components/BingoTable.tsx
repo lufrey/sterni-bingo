@@ -25,8 +25,14 @@ function hasBingo(bingo: Bingo, values: number[]) {
     return validBottomLeftToTopRight || validTopLeftToBottomRight;
 }
 
-export function BingoTable(props: { bingo: Bingo; entries: Entry[] }) {
+export function BingoTable(props: {
+    bingo: Bingo;
+    entries: Entry[];
+    highestEntryCount: number;
+    showFrequency?: boolean;
+}) {
     const entryValues = props.entries.map((entry) => entry.value);
+
     return (
         <div className="font-mono text-xl">
             {hasBingo(props.bingo, entryValues) ? (
@@ -40,14 +46,31 @@ export function BingoTable(props: { bingo: Bingo; entries: Entry[] }) {
                                 {row.map((cell, cellIndex) => {
                                     const highlighted =
                                         entryValues.includes(cell);
+                                    const count = entryValues.filter(
+                                        (value) => value === cell
+                                    ).length;
+
                                     return (
                                         <td
                                             key={cellIndex}
                                             className={cn(
                                                 "size-8",
+                                                highlighted && " text-white",
                                                 highlighted &&
-                                                    "bg-red-700 text-white"
+                                                    !props.showFrequency &&
+                                                    "bg-red-700"
                                             )}
+                                            style={
+                                                props.showFrequency
+                                                    ? {
+                                                          backgroundColor: `rgba(185, 28, 28, ${
+                                                              count /
+                                                              props.highestEntryCount
+                                                          })`,
+                                                      }
+                                                    : {}
+                                            }
+                                            title={count.toString()}
                                         >
                                             {cell < 10 ? "0" + cell : cell}
                                         </td>

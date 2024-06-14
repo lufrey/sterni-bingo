@@ -4,7 +4,7 @@ import { Entry } from "@/db/schema";
 
 export function PreviousEntries(props: { entries: Entry[]; username: string }) {
     return (
-        <div className="flex gap-2 font-mono justify-center pb-6">
+        <div className="flex gap-2 font-mono justify-center pb-6 flex-wrap">
             <span>Letze Einträge:</span>
             {props.entries.map((e) => (
                 <button
