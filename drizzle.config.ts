@@ -5,7 +5,7 @@ export default {
     out: "./src/drizzle",
     driver: "turso",
     dbCredentials: {
-        url: "file:src/db/sqlite.db",
+        url: `file:${process.env.DB_URL}`,
     },
     dialect: "sqlite",
 } satisfies Config;
